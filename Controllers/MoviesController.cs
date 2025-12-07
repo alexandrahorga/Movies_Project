@@ -22,7 +22,9 @@ namespace Movies_Project.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            var movies_ProjectContext = _context.Movie.Include(m => m.Genre);
+            var movies_ProjectContext = _context.Movie
+                .Include(m => m.Genre)
+                .Include(m => m.Director);
             return View(await movies_ProjectContext.ToListAsync());
         }
 
@@ -36,6 +38,7 @@ namespace Movies_Project.Controllers
 
             var movie = await _context.Movie
                 .Include(m => m.Genre)
+                .Include(m => m.Director)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (movie == null)
             {
@@ -49,6 +52,8 @@ namespace Movies_Project.Controllers
         public IActionResult Create()
         {
             ViewData["GenreID"] = new SelectList(_context.Set<Genre>(), "ID", "Name");
+            
+            ViewData["DirectorID"] = new SelectList(_context.Set<Director>(), "ID", "LastName");
             return View();
         }
 
@@ -57,7 +62,7 @@ namespace Movies_Project.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Director,Budget,GenreID")] Movie movie)
+        public async Task<IActionResult> Create([Bind("ID,Title,DirectorID,Budget,GenreID")] Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -66,6 +71,8 @@ namespace Movies_Project.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GenreID"] = new SelectList(_context.Set<Genre>(), "ID", "ID", movie.GenreID);
+          
+            ViewData["DirectorID"] = new SelectList(_context.Set<Director>(), "ID", "LastName", movie.DirectorID);
             return View(movie);
         }
 
@@ -83,6 +90,8 @@ namespace Movies_Project.Controllers
                 return NotFound();
             }
             ViewData["GenreID"] = new SelectList(_context.Set<Genre>(), "ID", "Name", movie.GenreID);
+            
+            ViewData["DirectorID"] = new SelectList(_context.Set<Director>(), "ID", "LastName", movie.DirectorID);
             return View(movie);
         }
 
@@ -91,7 +100,7 @@ namespace Movies_Project.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Director,Budget,GenreID")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,DirectorID,Budget,GenreID")] Movie movie)
         {
             if (id != movie.ID)
             {
@@ -119,6 +128,8 @@ namespace Movies_Project.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GenreID"] = new SelectList(_context.Set<Genre>(), "ID", "ID", movie.GenreID);
+         
+            ViewData["DirectorID"] = new SelectList(_context.Set<Director>(), "ID", "LastName", movie.DirectorID);
             return View(movie);
         }
 
@@ -132,6 +143,7 @@ namespace Movies_Project.Controllers
 
             var movie = await _context.Movie
                 .Include(m => m.Genre)
+                .Include(m => m.Director)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (movie == null)
             {

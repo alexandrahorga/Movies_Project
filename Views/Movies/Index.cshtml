@@ -33,9 +33,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Director)
-            </td>
+                <td>
+                    @if (item.Director != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.Director.FirstName)
+                       @: @Html.DisplayFor(modelItem => item.Director.LastName)
+                    }
+                    else
+                    {
+                        <span>N/A</span>
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Budget)
             </td>
