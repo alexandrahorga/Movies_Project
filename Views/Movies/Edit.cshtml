@@ -1,7 +1,11 @@
 ﻿@model Movies_Project.Models.Movie
+@using Movies_Project.Models
 
 @{
     ViewData["Title"] = "Edit";
+
+    // Extrage ID-urile actorilor care sunt deja asociați acestui film
+    var currentActorIds = Model.Actors?.Select(a => a.ActorID).ToList() ?? new List<int>();
 }
 
 <h1>Edit</h1>
@@ -13,11 +17,13 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
+
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="DirectorID" class="control-label"></label>
                 <select asp-for="DirectorID" class="form-control" asp-items="ViewBag.DirectorID">
@@ -25,16 +31,37 @@
                 </select>
                 <span asp-validation-for="DirectorID" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Budget" class="control-label"></label>
                 <input asp-for="Budget" class="form-control" />
                 <span asp-validation-for="Budget" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="GenreID" class="control-label"></label>
                 <select asp-for="GenreID" class="form-control" asp-items="ViewBag.GenreID"></select>
                 <span asp-validation-for="GenreID" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label class="control-label">Actori Asociați</label>
+                <div class="border p-3" style="height: 150px; overflow-y: scroll;">
+                    @foreach (var actor in (List<Actor>)ViewBag.AllActors)
+                    {
+                        // Verifică dacă actorul este deja selectat pentru acest film
+                        bool isSelected = currentActorIds.Contains(actor.ActorID);
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="selectedActors" value="@actor.ActorID" id="actor_@actor.ActorID" @(isSelected ? "checked" : "")>
+                            <label class="form-check-label" for="actor_@actor.ActorID">
+                                @actor.Name
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -47,5 +74,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

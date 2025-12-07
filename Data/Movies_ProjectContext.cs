@@ -18,5 +18,6 @@ namespace Movies_Project.Data
         public DbSet<Movies_Project.Models.Manager> Manager { get; set; } = default!;
         public DbSet<Movies_Project.Models.Genre> Genre { get; set; } = default!;
         public DbSet<Movies_Project.Models.Director> Director { get; set; } = default!;
+        public DbSet<Movies_Project.Models.Actor> Actor { get; set; } = default!;
     }
 }

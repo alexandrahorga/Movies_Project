@@ -1,8 +1,81 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Pagina Principală";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    /* Stiluri specifice pentru Jumbotronul tematic */
+    .jumbotron-movie {
+        /* Un gradient închis simulează o atmosferă de cinematograf */
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://picsum.photos/1200/500?random=1') no-repeat center center;
+        background-size: cover;
+        color: #ffc107; /* Text galben/auriu, specific temei */
+        padding: 4rem 2rem;
+        margin-bottom: 2rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+        .jumbotron-movie h1 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .jumbotron-movie .lead {
+            color: #f8f9fa;
+        }
+
+    .movie-link-button {
+        margin: 10px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        /* Butoane de acțiune cu temă */
+    }
+</style>
+
+<div class="jumbotron-movie">
+    <h1 class="display-4">🎬 Bun Venit în Baza Ta de Date Cinematografică!</h1>
+    <p class="lead">Gestionează filme, actori, regizori și genuri într-un singur loc.</p>
+    <hr class="my-4" style="border-color: rgba(255, 255, 255, 0.3);">
+    <p>Începe explorarea sau adaugă înregistrări noi direct din secțiunile de mai jos.</p>
+
+    <a class="btn btn-warning btn-lg movie-link-button" asp-controller="Movies" asp-action="Index" role="button">
+        Vezi Toate Filmele
+    </a>
+    <a class="btn btn-outline-light btn-lg movie-link-button" asp-controller="Actors" asp-action="Index" role="button">
+        Lista Actorilor
+    </a>
+</div>
+
+<div class="row text-center">
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body">
+                <h5 class="card-title">🎥 Regizori</h5>
+                <p class="card-text">Gestionează directorii și vezi filmele asociate fiecăruia.</p>
+                <a asp-controller="Directors" asp-action="Index" class="btn btn-sm btn-info">Accesează Regizori &raquo;</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body">
+                <h5 class="card-title">💼 Manageri</h5>
+                <p class="card-text">Administrează managerii din industrie și actorii pe care îi reprezintă.</p>
+                <a asp-controller="Managers" asp-action="Index" class="btn btn-sm btn-info">Accesează Manageri &raquo;</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body">
+                <h5 class="card-title">🏷️ Genuri</h5>
+                <p class="card-text">Organizează filmele pe categorii distincte (Acțiune, Dramă, Comedie etc.).</p>
+                <a asp-controller="Genres" asp-action="Index" class="btn btn-sm btn-info">Accesează Genuri &raquo;</a>
+            </div>
+        </div>
+    </div>
 </div>

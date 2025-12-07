@@ -29,6 +29,8 @@ namespace Movies_Project.Data
                 // Asigurați-vă că ștergeți datele vechi înainte de a adăuga altele noi
                 context.Movie.RemoveRange(context.Movie);
                 context.Genre.RemoveRange(context.Genre);
+                context.Manager.RemoveRange(context.Manager); // ADAUGAT
+                context.Director.RemoveRange(context.Director); // ADAUGAT
                 context.SaveChanges(); // Salvați ștergerile
 
                 var comedyGenre = new Genre { Name = "Comedy" };
@@ -96,6 +98,33 @@ namespace Movies_Project.Data
                
                 );
 
+                context.SaveChanges();
+                // Preluăm referințe la Manageri și Filme (presupunând ordinea de creare)
+                // Dvs. trebuie să ajustați variabilele (ChrisDirector, comedyGenre, etc.) cu numele folosite în codul dvs.
+                var marcelaManager = context.Manager.FirstOrDefault(m => m.Name == "Popescu Marcela");
+                var cornelManager = context.Manager.FirstOrDefault(m => m.Name == "Mihailescu Cornel");
+
+                var homeAloneMovie = context.Movie.FirstOrDefault(m => m.Title == "Home Alone");
+                var agent007Movie = context.Movie.FirstOrDefault(m => m.Title == "Agent 007");
+
+
+                // 5. ADĂUGARE ACTORI NOI (și asocierea lor)
+                context.Actor.AddRange(
+                    new Actor
+                    {
+                        Name = "Macaulay Culkin",
+                        Manager = marcelaManager, // Asociere Manager Popescu Marcela
+                        Movie = homeAloneMovie // Asociere Film Home Alone
+                    },
+                    new Actor
+                    {
+                        Name = "Sean Connery",
+                        Manager = cornelManager, // Asociere Manager Mihailescu Cornel
+                        Movie = agent007Movie // Asociere Film Agent 007
+                    }
+                );
+
+                // Salvăm schimbările pentru a include Actorii
                 context.SaveChanges();
             }
         }

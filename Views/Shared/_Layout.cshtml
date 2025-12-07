@@ -4,28 +4,62 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Movies_Project</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Movies_Project.styles.css" asp-append-version="true" />
+
+    <style>
+        /* Setează fonturi mai plăcute sau culori tematicii întunecate, opțional */
+        body {
+            background-color: #f8f9fa; /* Fundal deschis */
+        }
+
+        .navbar {
+            background-color: #343a40 !important; /* Navbar întunecat */
+            border-bottom: 3px solid #ffc107 !important; /* Linie galbenă (cinematică) */
+        }
+
+        .navbar-brand, .nav-link {
+            color: #ffc107 !important; /* Text galben pentru contrast */
+            font-weight: 600;
+        }
+
+            .nav-link:hover {
+                color: #ffffff !important; /* Text alb la hover */
+            }
+
+        .centered-nav {
+            justify-content: center !important;
+            width: 100%; /* Ocupă tot spațiul pentru centrare eficientă */
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Movies" asp-action="Index">Movies</a>
-                <a class="navbar-brand" asp-area="" asp-controller="Directors" asp-action="Index">Directors</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">🎬 Movie Project</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="navbar-collapse collapse d-sm-inline-flex centered-nav">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Movies" asp-action="Index">Filme</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Directors" asp-action="Index">Regizori</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Actors" asp-action="Index">Actori</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Managers" asp-action="Index">Manageri</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Genres" asp-action="Index">Genuri</a>
                         </li>
                     </ul>
                 </div>
@@ -39,8 +73,8 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Movies_Project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container text-center">
+            &copy; 2025 - Movies_Project - Proiect de Gestiune Filme
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

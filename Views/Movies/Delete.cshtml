@@ -1,4 +1,5 @@
 ﻿@model Movies_Project.Models.Movie
+@using Movies_Project.Models
 
 @{
     ViewData["Title"] = "Delete";
@@ -6,17 +7,20 @@
 
 <h1>Delete</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Ești sigur că vrei să ștergi acest film?</h3>
+<h5 class="text-danger">Atenție: Ștergerea acestui film va rupe legătura cu toți actorii asociați, dar nu îi va șterge.</h5>
+
 <div>
     <h4>Movie</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Director)
         </dt>
@@ -31,20 +35,43 @@
                 <span>N/A</span>
             }
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Budget)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Budget)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Genre)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genre.ID)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Genre.Name)
+        </dd>
+
+        <dt class="col-sm-2">
+            Actori Asociați
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Actors != null && Model.Actors.Any())
+            {
+                <ul class="list-unstyled">
+                    @foreach (var actor in Model.Actors)
+                    {
+                        <li>
+                            @Html.DisplayFor(item => actor.Name)
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <span>Nu sunt actori asociați.</span>
+            }
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="ID" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |

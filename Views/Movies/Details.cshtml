@@ -10,12 +10,13 @@
     <h4>Movie</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Director)
         </dt>
@@ -23,25 +24,56 @@
             @if (Model.Director != null)
             {
                 @Html.DisplayFor(model => model.Director.FirstName)
-               @: @Html.DisplayFor(model => model.Director.LastName)
+                @: @Html.DisplayFor(model => model.Director.LastName)
             }
             else
             {
                 <span>N/A</span>
             }
         </dd>
-        </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Budget)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Budget)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Genre)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genre.ID)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Genre.Name)
+        </dd>
+
+        <dt class="col-sm-2">
+            Actori (și Manageri)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Actors != null && Model.Actors.Any())
+            {
+                <ul class="list-unstyled">
+                    @foreach (var actor in Model.Actors)
+                    {
+                        <li>
+                            <strong>@Html.DisplayFor(item => actor.Name)</strong>
+                            (@if (actor.Manager != null)
+                            {
+                                @Html.DisplayFor(item => actor.Manager.Name)
+                            }
+                                        else
+                            {
+                                @:Fără Manager
+                            }
+                            )
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <span>Nu sunt actori asociați.</span>
+            }
         </dd>
     </dl>
 </div>
