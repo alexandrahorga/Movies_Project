@@ -11,35 +11,55 @@ namespace Movies_Project.Data
            (serviceProvider.GetRequiredService
             <DbContextOptions<Movies_ProjectContext>>()))
             {
-                if (context.Movie.Any())
-                {
-                    return; // BD a fost creata anterior
-                }
+                // ❌ Comentați SAU Ștergeți această condiție temporar
+                // if (context.Movie.Any())
+                // {
+                //     return; // BD a fost creata anterior
+                // }
+
+                // Asigurați-vă că ștergeți datele vechi înainte de a adăuga altele noi
+                context.Movie.RemoveRange(context.Movie);
+                context.Genre.RemoveRange(context.Genre);
+                context.SaveChanges(); // Salvați ștergerile
+                var comedyGenre = new Genre { Name = "Comedy" };
+                var adventureGenre = new Genre { Name = "Adventure" };
+                var romanceGenre = new Genre { Name = "Romance" };
+                context.Genre.AddRange(
+                   comedyGenre,
+                   adventureGenre,
+                   romanceGenre
+                );
                 context.Movie.AddRange(
                 new Movie
                 {
-                    Title = "Baltagul",
-                    Director = "Mihail Sadoveanu", Budget=Decimal.Parse("22")},
-               
+                    Title = "Home Alone",
+                    Director = "Chris Columbus",
+                    Budget = Decimal.Parse("222,305"),
+                    Genre = comedyGenre,
+                },
+
                 new Movie
                 {
-                    Title = "Enigma Otiliei",
-                    Director = "George Calinescu",
-                    Budget = Decimal.Parse("18")
+                    Title = "Agent 007",
+                    Director = "John Glen",
+                    Budget = Decimal.Parse("180,000"),
+                    Genre = adventureGenre,
                 },
                
                 new Movie
                 {
-                    Title = "Maytrei",
-                    Director = "Mircea Eliade", Budget=Decimal.Parse("27")}
+                    Title = "The Notebook",
+                    Director = "Nick Cassavetes", Budget=Decimal.Parse("27,898"),
+                    Genre = romanceGenre,
+                }
                
                 );
 
-                context.Genre.AddRange(
-               new Genre { Name = "Roman" },
-               new Genre { Name = "Nuvela" },
-               new Genre { Name = "Poezie" }
-                );
+               // context.Genre.AddRange(
+               //new Genre { Name = "Roman" },
+               //new Genre { Name = "Nuvela" },
+               //new Genre { Name = "Poezie" }
+               // );
                 context.Manager.AddRange(
                 new Manager
                 {
