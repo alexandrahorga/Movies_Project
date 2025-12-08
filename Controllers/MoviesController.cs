@@ -20,14 +20,46 @@ namespace Movies_Project.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            var movies_ProjectContext = _context.Movie
-                .Include(m => m.Genre)
-                .Include(m => m.Director)
-             .Include(m => m.Actors!);
-            //.ThenInclude(a => a.Manager);
-            return View(await movies_ProjectContext.ToListAsync());
+            // 1. Configurare parametri de sortare (pentru View)
+            // Titlu: Sortare implicită (default) este crescătoare. Dacă sortOrder este vid, devine desc.
+            ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+
+            // Buget: Dacă sortOrder este "Budget", devine desc. Altfel, rămâne crescătoare.
+            ViewData["BudgetSortParm"] = sortOrder == "Budget" ? "budget_desc" : "Budget";
+
+            // S-ar putea să fie utilă și o sortare pe Director, dar ne limităm la Titlu și Buget
+
+            // 2. Construirea interogării de bază (inclusiv relațiile necesare pentru Index)
+            IQueryable<Movie> movies = _context.Movie
+         .Include(m => m.Genre)
+         .Include(m => m.Director)
+         .Include(m => m.Actors!)
+         .ThenInclude(a => a.Manager); // Păstrează lanțul de includere
+
+            // 3. Aplicarea sortării
+            switch (sortOrder)
+            {
+                case "title_desc":
+                    movies = movies.OrderByDescending(m => m.Title);
+                    break;
+
+                case "Budget": // Când este "Budget" (click inițial), sortează crescător
+                    movies = movies.OrderBy(m => m.Budget);
+                    break;
+
+                case "budget_desc": // Când este "budget_desc" (al doilea click), sortează descrescător
+                    movies = movies.OrderByDescending(m => m.Budget);
+                    break;
+
+                default: // Când sortOrder este vid (sau altceva), sortează după Titlu crescător
+                    movies = movies.OrderBy(m => m.Title); // Elimină orice cast explicit aici
+                    break;
+            }
+
+            // 4. Returnează rezultatele
+            return View(await movies.AsNoTracking().ToListAsync());
         }
 
         // GET: Movies/Details/5
@@ -41,10 +73,11 @@ namespace Movies_Project.Controllers
             var movie = await _context.Movie
                 .Include(m => m.Genre)
                 .Include(m => m.Director)
-                  .Include(m => m.Actors!)
-                 .ThenInclude(a =>a.Manager)
-                 .AsNoTracking()
+                .Include(m => m.Actors!)
+                .ThenInclude(a => a.Manager)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (movie == null)
             {
                 return NotFound();
@@ -56,84 +89,53 @@ namespace Movies_Project.Controllers
         // GET: Movies/Create
         public IActionResult Create()
         {
-            ViewData["GenreID"] = new SelectList(_context.Set<Genre>(), "ID", "Name");
-            
-            ViewData["DirectorID"] = new SelectList(_context.Set<Director>(), "ID", "LastName");
-
-            ViewBag.AllActors = _context.Actor.OrderBy(a => a.Name).ToList();
-
+            PopulateDropDowns(null); // Încarcă liste pentru Director, Gen și Actori
             return View();
         }
 
-        // În MoviesController.cs
         // POST: Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // NOU: Adaugă `selectedActors` pentru a primi ID-urile din formular
-        public async Task<IActionResult> Create([Bind("ID,Title,DirectorID,Budget,GenreID")] Movie movie, int[] selectedActors)
+        // Corecție: Am eliminat "ID" din Bind și am adăugat `selectedActors` ca parametru
+        public async Task<IActionResult> Create([Bind("Title,DirectorID,Budget,GenreID")] Movie movie, int[] selectedActors)
         {
-            if (ModelState.IsValid)
+            try
             {
-                // 1. Găsește obiectele Actor corespunzătoare ID-urilor selectate
-                if (selectedActors != null)
+                if (ModelState.IsValid)
                 {
-                    movie.Actors = new List<Actor>();
-                    foreach (var actorId in selectedActors)
-                    {
-                        var actorToAdd = await _context.Actor.FindAsync(actorId);
-                        if (actorToAdd != null)
-                        {
-                            // Deoarece modelul Actor are FK la MovieID, trebuie să legăm invers
-                            // Fiecare Actor referă un singur Movie.
-                            // Vom actualiza MovieID al fiecărui actor selectat la ID-ul filmului.
-                            // ATENȚIE: Aici presupunem că un actor poate fi asociat unui SINGUR film la un moment dat.
-                             // Dacă un actor poate avea mai multe filme (relație Many-to-Many), modelul de date necesită o tabelă intermediară (join table) și o altă logică.
-
-                            // În contextul tău actual (Actor are MovieID), cel mai simplu e să facem update direct pe actor.
-                            // Dar pentru a crea un film, vom face următoarele (și vom corecta în Edit):
-
-                            // O simplă implementare "one-to-many" (Film -> Actori)
-                            if (actorToAdd.MovieID == null)
-                            {
-                                movie.Actors.Add(actorToAdd);
-                            }
-                            // NOTĂ: Logica ta de bază pare a fi un Many-to-Many simplificat.
-                            // Vom merge pe soluția standard Many-to-Many pentru View-uri.
-
-                        }
-                    }
-                }
-
-                // 2. Salvează Filmul
-                _context.Add(movie);
-                await _context.SaveChangesAsync();
-
-                // 3. După salvarea filmului, actualizăm și actorii asociați
-                if (selectedActors != null)
-                {
-                    foreach (var actorId in selectedActors)
-                    {
-                        var actorToUpdate = await _context.Actor.FindAsync(actorId);
-                        if (actorToUpdate != null)
-                        {
-                            actorToUpdate.MovieID = movie.ID; // Asociază actorul la filmul nou creat
-                        }
-                    }
+                    // 1. Adaugă filmul
+                    _context.Add(movie);
                     await _context.SaveChangesAsync();
+
+                    // 2. Actualizează actorii asociați
+                    if (selectedActors != null)
+                    {
+                        var actorsToUpdate = await _context.Actor
+                            .Where(a => selectedActors.Contains(a.ActorID))
+                            .ToListAsync();
+
+                        foreach (var actor in actorsToUpdate)
+                        {
+                            actor.MovieID = movie.ID; // Asociază actorul la filmul curent
+                        }
+                        await _context.SaveChangesAsync(); // Salvează schimbările la actori
+                    }
+
+                    return RedirectToAction(nameof(Index));
                 }
-
-
-                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                // Corecție: Adăugarea blocului try-catch pentru a gestiona erorile bazei de date
+                ModelState.AddModelError("", "Unable to save changes. " +
+                                             "Try again, and if the problem persists.");
             }
 
-            // Pe eroare, reîncarcă View-ul
-            ViewData["GenreID"] = new SelectList(_context.Set<Genre>(), "ID", "Name", movie.GenreID);
-            ViewData["DirectorID"] = new SelectList(_context.Set<Director>(), "ID", "LastName", movie.DirectorID);
-            ViewBag.AllActors = _context.Actor.OrderBy(a => a.Name).ToList();
-
+            // Reîncarcă datele pentru View pe eroare
+            PopulateDropDowns(movie);
             return View(movie);
         }
-        // În MoviesController.cs
+
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -142,9 +144,9 @@ namespace Movies_Project.Controllers
                 return NotFound();
             }
 
-            // NOU: Includem colecția de Actori pentru a ști care sunt deja selectați
             var movie = await _context.Movie
-                .Include(m => m.Actors)
+                .Include(m => m.Actors) // Include actorii asociați pentru a pre-selecta checkbox-urile
+                .AsNoTracking() // Recomandat pentru metodele GET
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             if (movie == null)
@@ -152,50 +154,39 @@ namespace Movies_Project.Controllers
                 return NotFound();
             }
 
-            // NOU: Trimite toți actorii disponibili către View
-            ViewBag.AllActors = _context.Actor.OrderBy(a => a.Name).ToList();
-
-
-            ViewData["GenreID"] = new SelectList(_context.Set<Genre>(), "ID", "Name", movie.GenreID);
-            ViewData["DirectorID"] = new SelectList(_context.Set<Director>(), "ID", "LastName", movie.DirectorID);
-
+            PopulateDropDowns(movie); // Încarcă liste (inclusiv lista de actori și cei selectați)
             return View(movie);
         }
 
         // POST: Movies/Edit/5
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        // NOU: Primim actorii selectați din formular
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,DirectorID,Budget,GenreID")] Movie movie, int[] selectedActors)
+        // Corecție: Metodă pentru prevenirea overposting-ului (TryUpdateModelAsync)
+        public async Task<IActionResult> EditPost(int? id, int[] selectedActors)
         {
-            if (id != movie.ID)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            // 1. Citește entitatea existentă (Movie) din baza de date
+            var movieToUpdate = await _context.Movie
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (movieToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            // 2. Aplică actualizările din formular doar pe câmpurile specificate
+            if (await TryUpdateModelAsync<Movie>(
+                movieToUpdate,
+                "", // Prefix
+                m => m.Title, m => m.DirectorID, m => m.Budget, m => m.GenreID))
             {
                 try
                 {
-                    // 1. Obține filmul din DB cu actorii asociați
-                    var movieToUpdate = await _context.Movie
-                        .Include(m => m.Actors)
-                        .FirstOrDefaultAsync(m => m.ID == id);
-
-                    if (movieToUpdate == null)
-                    {
-                        return NotFound();
-                    }
-
-                    // 2. Actualizează proprietățile de bază
-                    movieToUpdate.Title = movie.Title;
-                    movieToUpdate.DirectorID = movie.DirectorID;
-                    movieToUpdate.Budget = movie.Budget;
-                    movieToUpdate.GenreID = movie.GenreID;
-
-
-                    // 3. Actualizează asocierile cu actorii (Logică complexă)
-                    // Logica actuală (Actor are MovieID) impune ca actualizarea să se facă pe obiectele Actor:
+                    // 3. Logica de actualizare a asocierilor cu Actorii
 
                     // a) Des-asociază toți actorii care erau anterior asociați acestui film
                     var oldActors = await _context.Actor.Where(a => a.MovieID == id).ToListAsync();
@@ -207,43 +198,32 @@ namespace Movies_Project.Controllers
                     // b) Asociază actorii nou selectați
                     if (selectedActors != null)
                     {
-                        foreach (var actorId in selectedActors)
+                        var actorsToUpdate = await _context.Actor
+                            .Where(a => selectedActors.Contains(a.ActorID))
+                            .ToListAsync();
+
+                        foreach (var actor in actorsToUpdate)
                         {
-                            var actorToUpdate = await _context.Actor.FindAsync(actorId);
-                            if (actorToUpdate != null)
-                            {
-                                actorToUpdate.MovieID = id; // Asociază actorul la filmul curent
-                            }
+                            actor.MovieID = id; // Asociază actorul la filmul curent
                         }
                     }
 
-
-                    _context.Update(movieToUpdate);
+                    // 4. Salvează toate modificările (film și actori)
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!MovieExists(movie.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    // Corecție: Adăugarea blocului try-catch
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                                             "Try again, and if the problem persists");
                 }
-                return RedirectToAction(nameof(Index));
             }
 
-            // Pe eroare, reîncarcă View-ul
-            ViewData["GenreID"] = new SelectList(_context.Set<Genre>(), "ID", "Name", movie.GenreID);
-            ViewData["DirectorID"] = new SelectList(_context.Set<Director>(), "ID", "LastName", movie.DirectorID);
-            ViewBag.AllActors = _context.Actor.OrderBy(a => a.Name).ToList();
-
-            return View(movie);
+            // 5. Pe eroare, reîncarcă View-ul și datele necesare
+            PopulateDropDowns(movieToUpdate);
+            return View(movieToUpdate);
         }
-
-        
 
         // GET: Movies/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -256,7 +236,6 @@ namespace Movies_Project.Controllers
             var movie = await _context.Movie
                 .Include(m => m.Genre)
                 .Include(m => m.Director)
-                .Include(m =>m.Actors!)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (movie == null)
             {
@@ -266,32 +245,26 @@ namespace Movies_Project.Controllers
             return View(movie);
         }
 
-
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            // Găsește filmul (nu e nevoie să includem relațiile pentru ștergere)
             var movie = await _context.Movie.FindAsync(id);
 
             if (movie != null)
             {
-                // 1. Găsește toți actorii care sunt asociați cu acest film (au MovieID = id)
+                // Găsește toți actorii asociați și rupe legătura (setând MovieID la null)
                 var associatedActors = await _context.Actor
                     .Where(a => a.MovieID == id)
                     .ToListAsync();
 
-                // 2. Rupe legătura: setează MovieID la null pentru a preveni eroarea Foreign Key
                 foreach (var actor in associatedActors)
                 {
                     actor.MovieID = null;
                 }
 
-                // 3. Salvează schimbările actorilor (opțional, dar recomandat)
-                // await _context.SaveChangesAsync(); // Dacă folosești SaveChanges la final, nu e neapărat necesar aici
-
-                // 4. Șterge filmul
+                // Șterge filmul
                 _context.Movie.Remove(movie);
             }
 
@@ -303,6 +276,23 @@ namespace Movies_Project.Controllers
         private bool MovieExists(int id)
         {
             return _context.Movie.Any(e => e.ID == id);
+        }
+
+        // Metodă ajutătoare pentru a popula ViewDara și ViewBag (pentru Director, Gen și Actori)
+        private void PopulateDropDowns(Movie? movie)
+        {
+            // Dropdowns for Director and Genre
+            // Presupunem că Director are proprietatea "LastName" pentru afișare.
+            ViewData["GenreID"] = new SelectList(_context.Set<Genre>(), "ID", "Name", movie?.GenreID);
+            ViewData["DirectorID"] = new SelectList(_context.Set<Director>(), "ID", "LastName", movie?.DirectorID);
+
+            // Data for Actor Multi-select
+            var allActors = _context.Actor.OrderBy(a => a.Name).ToList();
+            var selectedActorIDs = movie?.Actors?.Select(a => a.ActorID).ToList() ?? new List<int>();
+
+            // Acestea vor fi folosite în Create.cshtml și Edit.cshtml pentru checkbox-uri
+            ViewBag.AllActors = allActors;
+            ViewBag.SelectedActors = selectedActorIDs;
         }
     }
 }
