@@ -34,7 +34,11 @@ namespace Movies_Project.Controllers
             }
 
             var director = await _context.Director
+                // NOU: Incarcă colecția de filme asociate directorului
+                .Include(d => d.Movies)
+                .AsNoTracking() // Recomandat pentru detalii
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (director == null)
             {
                 return NotFound();

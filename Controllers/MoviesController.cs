@@ -20,51 +20,63 @@ namespace Movies_Project.Controllers
         }
 
         // GET: Movies
+        
+
         public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            // 1. Configurare parametri de sortare (pentru View)
-            // Titlu: Sortare implicită (default) este crescătoare. Dacă sortOrder este vid, devine desc.
+            ViewData["CurrentSort"] = sortOrder;
+            // 1. Configurare parametri de sortare
             ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
-
-            // Buget: Dacă sortOrder este "Budget", devine desc. Altfel, rămâne crescătoare.
             ViewData["BudgetSortParm"] = sortOrder == "Budget" ? "budget_desc" : "Budget";
+
+            // NOU: Parametrul de sortare pentru Director
+            ViewData["DirectorSortParm"] = sortOrder == "Director" ? "director_desc" : "Director";
+
             ViewData["CurrentFilter"] = searchString;
-            // S-ar putea să fie utilă și o sortare pe Director, dar ne limităm la Titlu și Buget
 
-            // 2. Construirea interogării de bază (inclusiv relațiile necesare pentru Index)
-            IQueryable<Movie> movies = _context.Movie
-         .Include(m => m.Genre)
-         .Include(m => m.Director)
-         .Include(m => m.Actors!)
-         .ThenInclude(a => a.Manager); // Păstrează lanțul de includere
+            // 2. Construirea interogării de bază
+            var movies = _context.Movie
+                .Include(m => m.Genre)
+                .Include(m => m.Director)
+                .Include(m => m.Actors!)
+                .ThenInclude(a => a.Manager)
+                .AsNoTracking(); // Recomandat
 
+            // 3. Aplicarea filtrării (logica existentă)
             if (!String.IsNullOrEmpty(searchString))
             {
-                // Aplică filtrarea după titlu (câmpul Title al filmului)
                 movies = movies.Where(m => m.Title.Contains(searchString));
             }
-            // 3. Aplicarea sortării
+
+            // 4. Aplicarea sortării
             switch (sortOrder)
             {
                 case "title_desc":
                     movies = movies.OrderByDescending(m => m.Title);
                     break;
 
-                case "Budget": // Când este "Budget" (click inițial), sortează crescător
+                case "Budget":
                     movies = movies.OrderBy(m => m.Budget);
                     break;
 
-                case "budget_desc": // Când este "budget_desc" (al doilea click), sortează descrescător
+                case "budget_desc":
                     movies = movies.OrderByDescending(m => m.Budget);
                     break;
 
-                default: // Când sortOrder este vid (sau altceva), sortează după Titlu crescător
-                    movies = movies.OrderBy(m => m.Title); // Elimină orice cast explicit aici
+                case "Director": // NOU: Sortează crescător după LastName, apoi FirstName
+                    movies = movies.OrderBy(m => m.Director.FirstName).ThenBy(m => m.Director.LastName);
+                    break;
+
+                case "director_desc": // NOU: Sortează descrescător după LastName, apoi FirstName
+                    movies = movies.OrderByDescending(m => m.Director.FirstName).ThenByDescending(m => m.Director.LastName);
+                    break;
+
+                default: // Sortare implicită (Titlu crescător)
+                    movies = movies.OrderBy(m => m.Title);
                     break;
             }
 
-            // 4. Returnează rezultatele
-            return View(await movies.AsNoTracking().ToListAsync());
+            return View(await movies.ToListAsync());
         }
 
         // GET: Movies/Details/5
