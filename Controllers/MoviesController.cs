@@ -20,7 +20,7 @@ namespace Movies_Project.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             // 1. Configurare parametri de sortare (pentru View)
             // Titlu: Sortare implicită (default) este crescătoare. Dacă sortOrder este vid, devine desc.
@@ -28,7 +28,7 @@ namespace Movies_Project.Controllers
 
             // Buget: Dacă sortOrder este "Budget", devine desc. Altfel, rămâne crescătoare.
             ViewData["BudgetSortParm"] = sortOrder == "Budget" ? "budget_desc" : "Budget";
-
+            ViewData["CurrentFilter"] = searchString;
             // S-ar putea să fie utilă și o sortare pe Director, dar ne limităm la Titlu și Buget
 
             // 2. Construirea interogării de bază (inclusiv relațiile necesare pentru Index)
@@ -38,6 +38,11 @@ namespace Movies_Project.Controllers
          .Include(m => m.Actors!)
          .ThenInclude(a => a.Manager); // Păstrează lanțul de includere
 
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                // Aplică filtrarea după titlu (câmpul Title al filmului)
+                movies = movies.Where(m => m.Title.Contains(searchString));
+            }
             // 3. Aplicarea sortării
             switch (sortOrder)
             {
