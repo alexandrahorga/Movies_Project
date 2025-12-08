@@ -65,7 +65,7 @@ namespace Movies_Project.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         // Corecție: Adaugă "Name" la proprietățile legate (Bind)
-        public async Task<IActionResult> Create([Bind("ActorID,Name,ManagerID,MovieID")] Actor actor)
+        public async Task<IActionResult> Create([Bind("ActorID,Name,BirthDate,ManagerID,MovieID")] Actor actor)
         {
             if (ModelState.IsValid)
             {
@@ -102,7 +102,7 @@ namespace Movies_Project.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         // Corecție: Adaugă "Name" la proprietățile legate (Bind)
-        public async Task<IActionResult> Edit(int id, [Bind("ActorID,Name,ManagerID,MovieID")] Actor actor)
+        public async Task<IActionResult> Edit(int id, [Bind("ActorID,Name,BirthDate,ManagerID,MovieID")] Actor actor)
         {
             if (id != actor.ActorID)
             {

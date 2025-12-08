@@ -43,6 +43,7 @@ namespace Movies_Project.Controllers
                 .Include(m => m.Director)
                   .Include(m => m.Actors!)
                  .ThenInclude(a =>a.Manager)
+                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (movie == null)
             {
@@ -86,7 +87,7 @@ namespace Movies_Project.Controllers
                             // Fiecare Actor referă un singur Movie.
                             // Vom actualiza MovieID al fiecărui actor selectat la ID-ul filmului.
                             // ATENȚIE: Aici presupunem că un actor poate fi asociat unui SINGUR film la un moment dat.
-                            // Dacă un actor poate avea mai multe filme (relație Many-to-Many), modelul de date necesită o tabelă intermediară (join table) și o altă logică.
+                             // Dacă un actor poate avea mai multe filme (relație Many-to-Many), modelul de date necesită o tabelă intermediară (join table) și o altă logică.
 
                             // În contextul tău actual (Actor are MovieID), cel mai simplu e să facem update direct pe actor.
                             // Dar pentru a crea un film, vom face următoarele (și vom corecta în Edit):

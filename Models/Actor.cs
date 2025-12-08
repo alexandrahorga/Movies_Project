@@ -9,6 +9,8 @@ namespace Movies_Project.Models
     {
         public int ActorID { get; set; }
         public string Name { get; set; }
+
+        public DateTime BirthDate { get; set; }
         public int? ManagerID { get; set; }
         public int? MovieID { get; set; }
 

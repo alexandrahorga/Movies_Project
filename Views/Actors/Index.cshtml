@@ -16,6 +16,9 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.BirthDate)
+            </th>
+            <th>
                 Titlu Film
             </th>
             <th>
@@ -30,6 +33,9 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BirthDate)
                 </td>
                 <td>
                     @if (item.Movie != null)
