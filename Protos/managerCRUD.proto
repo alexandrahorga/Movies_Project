@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option csharp_namespace = "ManagerService"; 
+
+package manager;
+
+service ManagerCRUDService {
+ 
+ rpc GetAll (Empty) returns (ManagerList) {}
+ 
+ rpc Get (ManagerId) returns (Manager) {}
+ 
+ rpc Insert (Manager) returns (Empty) {}
+ 
+ rpc Update (Manager) returns (Empty) {}
+ 
+ rpc Delete (ManagerId) returns (Empty) {}
+}
+
+message Empty {}
+
+message Manager {
+ int32 managerId = 1; 
+ string name = 2;
+ string adress = 3;
+ string birthDate = 4; 
+}
+
+message ManagerList {
+ repeated Manager item = 1;
+}
+
+message ManagerId {
+ int32 id = 1;
+}

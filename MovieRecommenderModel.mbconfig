@@ -1,0 +1,557 @@
+﻿{
+  "Scenario": "Regression",
+  "DataSource": {
+    "Version": 3,
+    "EscapeCharacter": "\"",
+    "ReadMultiLines": false,
+    "KeepDiacritics": false,
+    "KeepPunctuations": false,
+    "AllowQuoting": false,
+    "Type": "TabularFile",
+    "FilePath": "C:\\Users\\40745\\Desktop\\Master\\Medii de programare\\movies.csv",
+    "Delimiter": ",",
+    "DecimalMarker": ".",
+    "HasHeader": true,
+    "ColumnProperties": [
+      {
+        "ColumnName": "index",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "Single",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "budget",
+        "ColumnPurpose": "Label",
+        "ColumnDataFormat": "Single",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "genres",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "homepage",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "id",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "Single",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "keywords",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "original_language",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": true,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "original_title",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "overview",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "popularity",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "production_companies",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "production_countries",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "release_date",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "revenue",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "runtime",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "spoken_languages",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "status",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "tagline",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "title",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "vote_average",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "vote_count",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "cast",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "crew",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "director",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      }
+    ]
+  },
+  "Environment": {
+    "Type": "LocalCPU",
+    "Version": 1
+  },
+  "RunHistory": {
+    "Version": 3,
+    "Type": "Result",
+    "Trials": [
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "FastForestRegression",
+        "Score": 0.909180484193748,
+        "RuntimeInSeconds": 40.034,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4 * e5 * e6 * e7 * e8 * e9 * e10 * e11 * e12 * e13 * e14 * e15 * e16 * e17 * e18 * e19 * e20 * e21 * e22 * e24",
+          "e0": {
+            "OutputColumnNames": [
+              "original_language"
+            ],
+            "InputColumnNames": [
+              "original_language"
+            ]
+          },
+          "e1": {
+            "OutputColumnNames": [
+              "index",
+              "id"
+            ],
+            "InputColumnNames": [
+              "index",
+              "id"
+            ]
+          },
+          "e10": {
+            "InputColumnName": "release_date",
+            "OutputColumnName": "release_date"
+          },
+          "e11": {
+            "InputColumnName": "revenue",
+            "OutputColumnName": "revenue"
+          },
+          "e12": {
+            "InputColumnName": "runtime",
+            "OutputColumnName": "runtime"
+          },
+          "e13": {
+            "InputColumnName": "spoken_languages",
+            "OutputColumnName": "spoken_languages"
+          },
+          "e14": {
+            "InputColumnName": "status",
+            "OutputColumnName": "status"
+          },
+          "e15": {
+            "InputColumnName": "tagline",
+            "OutputColumnName": "tagline"
+          },
+          "e16": {
+            "InputColumnName": "title",
+            "OutputColumnName": "title"
+          },
+          "e17": {
+            "InputColumnName": "vote_average",
+            "OutputColumnName": "vote_average"
+          },
+          "e18": {
+            "InputColumnName": "vote_count",
+            "OutputColumnName": "vote_count"
+          },
+          "e19": {
+            "InputColumnName": "cast",
+            "OutputColumnName": "cast"
+          },
+          "e2": {
+            "InputColumnName": "genres",
+            "OutputColumnName": "genres"
+          },
+          "e20": {
+            "InputColumnName": "crew",
+            "OutputColumnName": "crew"
+          },
+          "e21": {
+            "InputColumnName": "director",
+            "OutputColumnName": "director"
+          },
+          "e22": {
+            "InputColumnNames": [
+              "original_language",
+              "index",
+              "id",
+              "genres",
+              "homepage",
+              "keywords",
+              "original_title",
+              "overview",
+              "popularity",
+              "production_companies",
+              "production_countries",
+              "release_date",
+              "revenue",
+              "runtime",
+              "spoken_languages",
+              "status",
+              "tagline",
+              "title",
+              "vote_average",
+              "vote_count",
+              "cast",
+              "crew",
+              "director"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e24": {
+            "NumberOfTrees": 4,
+            "NumberOfLeaves": 4,
+            "FeatureFraction": 1.0,
+            "LabelColumnName": "budget",
+            "FeatureColumnName": "Features"
+          },
+          "e3": {
+            "InputColumnName": "homepage",
+            "OutputColumnName": "homepage"
+          },
+          "e4": {
+            "InputColumnName": "keywords",
+            "OutputColumnName": "keywords"
+          },
+          "e5": {
+            "InputColumnName": "original_title",
+            "OutputColumnName": "original_title"
+          },
+          "e6": {
+            "InputColumnName": "overview",
+            "OutputColumnName": "overview"
+          },
+          "e7": {
+            "InputColumnName": "popularity",
+            "OutputColumnName": "popularity"
+          },
+          "e8": {
+            "InputColumnName": "production_companies",
+            "OutputColumnName": "production_companies"
+          },
+          "e9": {
+            "InputColumnName": "production_countries",
+            "OutputColumnName": "production_countries"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "FastTreeRegression",
+        "Score": 0.26584597380436148,
+        "RuntimeInSeconds": 38.242,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4 * e5 * e6 * e7 * e8 * e9 * e10 * e11 * e12 * e13 * e14 * e15 * e16 * e17 * e18 * e19 * e20 * e21 * e22 * e23",
+          "e0": {
+            "OutputColumnNames": [
+              "original_language"
+            ],
+            "InputColumnNames": [
+              "original_language"
+            ]
+          },
+          "e1": {
+            "OutputColumnNames": [
+              "index",
+              "id"
+            ],
+            "InputColumnNames": [
+              "index",
+              "id"
+            ]
+          },
+          "e10": {
+            "InputColumnName": "release_date",
+            "OutputColumnName": "release_date"
+          },
+          "e11": {
+            "InputColumnName": "revenue",
+            "OutputColumnName": "revenue"
+          },
+          "e12": {
+            "InputColumnName": "runtime",
+            "OutputColumnName": "runtime"
+          },
+          "e13": {
+            "InputColumnName": "spoken_languages",
+            "OutputColumnName": "spoken_languages"
+          },
+          "e14": {
+            "InputColumnName": "status",
+            "OutputColumnName": "status"
+          },
+          "e15": {
+            "InputColumnName": "tagline",
+            "OutputColumnName": "tagline"
+          },
+          "e16": {
+            "InputColumnName": "title",
+            "OutputColumnName": "title"
+          },
+          "e17": {
+            "InputColumnName": "vote_average",
+            "OutputColumnName": "vote_average"
+          },
+          "e18": {
+            "InputColumnName": "vote_count",
+            "OutputColumnName": "vote_count"
+          },
+          "e19": {
+            "InputColumnName": "cast",
+            "OutputColumnName": "cast"
+          },
+          "e2": {
+            "InputColumnName": "genres",
+            "OutputColumnName": "genres"
+          },
+          "e20": {
+            "InputColumnName": "crew",
+            "OutputColumnName": "crew"
+          },
+          "e21": {
+            "InputColumnName": "director",
+            "OutputColumnName": "director"
+          },
+          "e22": {
+            "InputColumnNames": [
+              "original_language",
+              "index",
+              "id",
+              "genres",
+              "homepage",
+              "keywords",
+              "original_title",
+              "overview",
+              "popularity",
+              "production_companies",
+              "production_countries",
+              "release_date",
+              "revenue",
+              "runtime",
+              "spoken_languages",
+              "status",
+              "tagline",
+              "title",
+              "vote_average",
+              "vote_count",
+              "cast",
+              "crew",
+              "director"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e23": {
+            "NumberOfLeaves": 4,
+            "MinimumExampleCountPerLeaf": 20,
+            "NumberOfTrees": 4,
+            "MaximumBinCountPerFeature": 254,
+            "FeatureFraction": 1.0,
+            "LearningRate": 0.099999999999999978,
+            "LabelColumnName": "budget",
+            "FeatureColumnName": "Features",
+            "DiskTranspose": false
+          },
+          "e3": {
+            "InputColumnName": "homepage",
+            "OutputColumnName": "homepage"
+          },
+          "e4": {
+            "InputColumnName": "keywords",
+            "OutputColumnName": "keywords"
+          },
+          "e5": {
+            "InputColumnName": "original_title",
+            "OutputColumnName": "original_title"
+          },
+          "e6": {
+            "InputColumnName": "overview",
+            "OutputColumnName": "overview"
+          },
+          "e7": {
+            "InputColumnName": "popularity",
+            "OutputColumnName": "popularity"
+          },
+          "e8": {
+            "InputColumnName": "production_companies",
+            "OutputColumnName": "production_companies"
+          },
+          "e9": {
+            "InputColumnName": "production_countries",
+            "OutputColumnName": "production_countries"
+          }
+        }
+      }
+    ],
+    "Estimators": {
+      "e0": "OneHotEncoding",
+      "e1": "ReplaceMissingValues",
+      "e2": "FeaturizeText",
+      "e3": "FeaturizeText",
+      "e4": "FeaturizeText",
+      "e5": "FeaturizeText",
+      "e6": "FeaturizeText",
+      "e7": "FeaturizeText",
+      "e8": "FeaturizeText",
+      "e9": "FeaturizeText",
+      "e10": "FeaturizeText",
+      "e11": "FeaturizeText",
+      "e12": "FeaturizeText",
+      "e13": "FeaturizeText",
+      "e14": "FeaturizeText",
+      "e15": "FeaturizeText",
+      "e16": "FeaturizeText",
+      "e17": "FeaturizeText",
+      "e18": "FeaturizeText",
+      "e19": "FeaturizeText",
+      "e20": "FeaturizeText",
+      "e21": "FeaturizeText",
+      "e22": "Concatenate",
+      "e23": "FastTreeRegression",
+      "e24": "FastForestRegression",
+      "e25": "LightGbmRegression",
+      "e26": "LbfgsPoissonRegressionRegression",
+      "e27": "SdcaRegression"
+    },
+    "Schema": "e0 * e1 * e2 * e3 * e4 * e5 * e6 * e7 * e8 * e9 * e10 * e11 * e12 * e13 * e14 * e15 * e16 * e17 * e18 * e19 * e20 * e21 * e22 * (e23 + e24 + e25 + e26 + e27)",
+    "MetricName": "RSquared",
+    "ModelFilePath": "C:\\Users\\40745\\Desktop\\Master\\Medii de programare\\Movies_Project\\MovieRecommenderModel.mlnet"
+  },
+  "Type": "TrainingConfig",
+  "Version": 5,
+  "TrainingOption": {
+    "Version": 2,
+    "Subsampling": false,
+    "Type": "RegressionTrainingOption",
+    "TrainingTime": 600,
+    "LabelColumn": "budget",
+    "ValidationOption": {
+      "Version": 0,
+      "Type": "CrossValidationValidationOption",
+      "NumberOfFolds": 5
+    }
+  }
+}

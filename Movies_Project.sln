@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36717.8 d17.14
+VisualStudioVersion = 17.14.36717.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies_Project", "Movies_Project.csproj", "{79401C29-F663-4FE4-B33E-E3C1ED42D74E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcManagerService", "..\GrpcManagerService\GrpcManagerService.csproj", "{6AF35700-722C-433B-9EBE-8E642B84C7CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vote_AvrageModel_WebApi", "..\Vote_AvrageModel_WebApi\Vote_AvrageModel_WebApi.csproj", "{5DC4BF24-C02C-309C-0FC8-2DD6A2F4DECA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{79401C29-F663-4FE4-B33E-E3C1ED42D74E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79401C29-F663-4FE4-B33E-E3C1ED42D74E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79401C29-F663-4FE4-B33E-E3C1ED42D74E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AF35700-722C-433B-9EBE-8E642B84C7CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AF35700-722C-433B-9EBE-8E642B84C7CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AF35700-722C-433B-9EBE-8E642B84C7CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AF35700-722C-433B-9EBE-8E642B84C7CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DC4BF24-C02C-309C-0FC8-2DD6A2F4DECA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DC4BF24-C02C-309C-0FC8-2DD6A2F4DECA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DC4BF24-C02C-309C-0FC8-2DD6A2F4DECA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DC4BF24-C02C-309C-0FC8-2DD6A2F4DECA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
